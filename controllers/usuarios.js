@@ -2,6 +2,7 @@ const { response, request } = require('express');
 const Usuario = require('../models/usuario');
 const bcryptjs = require('bcryptjs');
 
+
 const usuariosGet = async ( req = request , res = response) => {
   
     const { limite =  5, desde = 0 } = req.query;
@@ -67,10 +68,11 @@ const usuariosDelete = async ( req , res = response) => {
 
     //const usuario = await Usuario.findByIdAndDelete(id); eliminado permanente
     const usuario = await Usuario.findByIdAndUpdate(id, {estado: false}); // simulacion de eliminacion
+    const usuarioAutenticado = req.usuario;
 
     res.json({
-        id,
-        usuario
+        usuario,
+        usuarioAutenticado 
     });
 }
 

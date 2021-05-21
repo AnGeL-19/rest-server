@@ -1,7 +1,12 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const {validarCampos} = require('../middlewares/validar-campos');
+const {
+    validarCampos,
+    validarJWT,
+    esAdminRole,
+    tieneRol
+ } = require('../middlewares/');
 
 const { esRoleValido,
         existeEmail,
@@ -13,6 +18,7 @@ const { usuariosGet,
         usuariosPatch,
         usuariosDelete 
       } = require('../controllers/usuarios');
+
 
 
 
@@ -48,6 +54,9 @@ router.post('/', [
 router.patch('/', usuariosPatch );
 
 router.delete('/:id', [
+    validarJWT,
+    //esAdminRole, // ESTE TIENE QUE SER DE AFUERZAS EL ROL DE ADMIN PARA BORRAR
+    tieneRol("ADMIN_ROL", "USER_ROL"), // SON LOS ROLES QUE TIENE ACCESO A BORRAR
     check('id', 'El id no es valido').isMongoId(),
     check('id').custom(existeUsuarioPorId),
     validarCampos
